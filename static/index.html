@@ -1,475 +1,583 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Complaint Tracker</title>
-    <style>
-      :root {
-        --bg: #f4f7fb;
-        --panel: #ffffff;
-        --panel-alt: #eef4ff;
-        --primary: #1d4ed8;
-        --primary-dark: #1e3a8a;
-        --success: #10b981;
-        --warning: #f59e0b;
-        --danger: #ef4444;
-        --text: #0f172a;
-        --muted: #475569;
-        --border: #dbe3f0;
-        --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
-      }
 
-      * { box-sizing: border-box; }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complaint Tracker</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --panel-alt: #eef4ff;
+      --primary: #1d4ed8;
+      --primary-dark: #1e3a8a;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #dbe3f0;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    }
 
-      html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
 
-      body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(180deg, #edf4ff 0%, var(--bg) 180px, var(--bg) 100%);
-        color: var(--text);
-      }
+    html {
+      scroll-behavior: smooth;
+    }
 
-      .container {
-        max-width: 1180px;
-        margin: 0 auto;
-        padding: 32px 20px 48px;
-      }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #edf4ff 0%, var(--bg) 180px, var(--bg) 100%);
+      color: var(--text);
+    }
 
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 18px 0 24px;
-      }
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
 
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-weight: 700;
-        color: var(--primary-dark);
-      }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 0 24px;
+    }
 
-      .brand-mark {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, var(--primary), #60a5fa);
-        display: grid;
-        place-items: center;
-        color: white;
-        font-size: 1.1rem;
-        box-shadow: var(--shadow);
-      }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
 
-      .pill {
-        background: rgba(29, 78, 216, 0.1);
-        color: var(--primary-dark);
-        border: 1px solid rgba(29, 78, 216, 0.12);
-        padding: 8px 12px;
-        border-radius: 999px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), #60a5fa);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 1.1rem;
+      box-shadow: var(--shadow);
+    }
 
-      .hero {
-        display: grid;
-        grid-template-columns: 1.25fr 0.95fr;
-        gap: 24px;
-        align-items: stretch;
-        margin-bottom: 24px;
-      }
+    .pill {
+      background: rgba(29, 78, 216, 0.1);
+      color: var(--primary-dark);
+      border: 1px solid rgba(29, 78, 216, 0.12);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
 
-      .panel {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        box-shadow: var(--shadow);
-      }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
 
-      .hero-copy {
-        padding: 28px 28px 20px;
-      }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
 
-      h1 {
-        margin: 18px 0 12px;
-        font-size: clamp(2.2rem, 4vw, 3.3rem);
-        line-height: 1.1;
-        letter-spacing: -0.06em;
-      }
+    .hero-copy {
+      padding: 28px 28px 20px;
+    }
 
-      .hero-copy p {
-        margin: 0;
-        max-width: 600px;
-        color: var(--muted);
-        font-size: 1.05rem;
-        line-height: 1.7;
-      }
+    h1 {
+      margin: 18px 0 12px;
+      font-size: clamp(2.2rem, 4vw, 3.3rem);
+      line-height: 1.1;
+      letter-spacing: -0.06em;
+    }
 
-      .hero-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
-        margin-top: 26px;
-      }
+    .hero-copy p {
+      margin: 0;
+      max-width: 600px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
 
-      button,
-      input,
-      select,
-      textarea {
-        font: inherit;
-      }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 26px;
+    }
 
-      .primary-button,
-      .secondary-button,
-      .action-button {
-        border: none;
-        border-radius: 12px;
-        padding: 12px 18px;
-        cursor: pointer;
-        font-weight: 700;
-        transition: 0.2s ease;
-      }
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
 
-      .primary-button {
-        background: linear-gradient(135deg, var(--primary), #3b82f6);
-        color: white;
-        box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
-      }
+    .primary-button,
+    .secondary-button,
+    .action-button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
 
-      .primary-button:hover { transform: translateY(-1px); }
-      .primary-button:disabled {
-        cursor: wait;
-        opacity: 0.7;
-        transform: none;
-      }
+    .primary-button {
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: white;
+      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+    }
 
-      .secondary-button {
-        background: var(--panel-alt);
-        color: var(--primary-dark);
-      }
+    .primary-button:hover {
+      transform: translateY(-1px);
+    }
 
-      .hero-stats {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-        margin-top: 28px;
-      }
+    .primary-button:disabled {
+      cursor: wait;
+      opacity: 0.7;
+      transform: none;
+    }
 
-      .stat {
-        background: #f8fbff;
-        border: 1px solid var(--border);
-        padding: 16px 14px;
-        border-radius: 16px;
-      }
+    .secondary-button {
+      background: var(--panel-alt);
+      color: var(--primary-dark);
+    }
 
-      .stat .label {
-        display: block;
-        font-size: 0.76rem;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-bottom: 8px;
-      }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
 
-      .stat strong {
-        font-size: clamp(1.4rem, 2vw, 2rem);
-        letter-spacing: -0.04em;
-      }
+    .stat {
+      background: #f8fbff;
+      border: 1px solid var(--border);
+      padding: 16px 14px;
+      border-radius: 16px;
+    }
 
-      .hero-card {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 20px;
-        background: linear-gradient(180deg, var(--primary-dark), #0f172a);
-        color: white;
-      }
+    .stat .label {
+      display: block;
+      font-size: 0.76rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
 
-      .hero-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+    .stat strong {
+      font-size: clamp(1.4rem, 2vw, 2rem);
+      letter-spacing: -0.04em;
+    }
 
-      .mini-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 999px;
-        padding: 7px 10px;
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
+    .hero-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      background: linear-gradient(180deg, var(--primary-dark), #0f172a);
+      color: white;
+    }
 
-      .mini-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #69f0ae;
-        display: inline-block;
-      }
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-      .status-list {
-        margin: 26px 0 0;
-        display: grid;
-        gap: 12px;
-      }
+    .mini-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
 
-      .status-line {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 14px;
-        padding: 12px 14px;
-      }
+    .mini-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #69f0ae;
+      display: inline-block;
+    }
 
-      .status-line strong { font-size: 0.96rem; }
+    .status-list {
+      margin: 26px 0 0;
+      display: grid;
+      gap: 12px;
+    }
 
-      .badge {
-        min-width: 66px;
-        text-align: center;
-        padding: 7px 10px;
-        border-radius: 999px;
-        font-weight: 700;
-        font-size: 0.78rem;
-      }
+    .status-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
 
-      .badge.pending { background: rgba(245, 158, 11, 0.18); color: #f59e0b; }
-      .badge.in_progress { background: rgba(37, 99, 235, 0.18); color: #2563eb; }
-      .badge.resolved { background: rgba(16, 185, 129, 0.18); color: #047857; }
-      .badge.rejected { background: rgba(239, 68, 68, 0.18); color: #b91c1c; }
+    .status-line strong {
+      font-size: 0.96rem;
+    }
 
+    .badge {
+      min-width: 66px;
+      text-align: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.78rem;
+    }
+
+    .badge.pending {
+      background: rgba(245, 158, 11, 0.18);
+      color: #f59e0b;
+    }
+
+    .badge.in_progress {
+      background: rgba(37, 99, 235, 0.18);
+      color: #2563eb;
+    }
+
+    .badge.resolved {
+      background: rgba(16, 185, 129, 0.18);
+      color: #047857;
+    }
+
+    .badge.rejected {
+      background: rgba(239, 68, 68, 0.18);
+      color: #b91c1c;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 24px;
+    }
+
+    .card {
+      padding: 22px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text);
+      padding: 12px 14px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(29, 78, 216, 0.5);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .filter-box {
+      display: grid;
+      gap: 8px;
+    }
+
+    .list-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .complaint-item {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #fff, #f8fbff);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .complaint-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .complaint-title {
+      margin: 0;
+      font-size: 1.06rem;
+    }
+
+    .complaint-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+    }
+
+    .complaint-desc {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .complaint-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .complaint-footer small {
+      color: var(--muted);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-button {
+      background: #eaf2ff;
+      color: var(--primary-dark);
+      padding: 8px 12px;
+      font-size: 0.8rem;
+    }
+
+    .action-button.delete {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .empty-state {
+      padding: 28px 18px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 18px;
+      background: #fbfdff;
+    }
+
+    .notice {
+      display: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .notice.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .notice.success {
+      display: block;
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .complaint-title {
+      overflow-wrap: anywhere;
+    }
+
+    .complaint-desc {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .auth-wrap {
+      max-width: 440px;
+      margin: 40px auto;
+      padding: 28px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .auth-tabs button {
+      flex: 1;
+    }
+
+    .auth-tabs .active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .userbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .role-tag {
+      background: #1e3a8a;
+      color: #fff;
+    }
+
+    .role-tag.citizen {
+      background: rgba(29, 78, 216, 0.1);
+      color: var(--primary-dark);
+    }
+
+    .remarks {
+      margin: -4px 0 12px;
+      font-size: 0.85rem;
+      color: var(--primary-dark);
+      background: var(--panel-alt);
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+
+    .action-button.reject {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    @media (max-width: 900px) {
+
+      .hero,
       .main-grid {
-        display: grid;
-        grid-template-columns: 1fr 1.3fr;
-        gap: 24px;
+        grid-template-columns: 1fr;
       }
+    }
 
-      .card {
-        padding: 22px;
-      }
+    @media (max-width: 560px) {
 
+      .topbar,
+      .complaint-top,
+      .complaint-footer,
       .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 18px;
-      }
-
-      .card-header h2 {
-        margin: 0;
-        font-size: 1.3rem;
-      }
-
-      form {
-        display: grid;
-        gap: 16px;
-      }
-
-      .field {
-        display: grid;
-        gap: 8px;
-      }
-
-      label {
-        font-weight: 700;
-        font-size: 0.9rem;
-      }
-
-      input,
-      select,
-      textarea {
-        width: 100%;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: #fff;
-        color: var(--text);
-        padding: 12px 14px;
-        outline: none;
-      }
-
-      input:focus,
-      select:focus,
-      textarea:focus {
-        border-color: rgba(29, 78, 216, 0.5);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-      }
-
-      textarea {
-        min-height: 110px;
-        resize: vertical;
-      }
-
-      .two-col {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-      }
-
-      .filters {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-        margin-bottom: 18px;
-      }
-
-      .filter-box {
-        display: grid;
-        gap: 8px;
-      }
-
-      .list-panel {
-        display: grid;
-        gap: 14px;
-      }
-
-      .complaint-item {
-        border: 1px solid var(--border);
-        background: linear-gradient(180deg, #fff, #f8fbff);
-        border-radius: 18px;
-        padding: 16px;
-      }
-
-      .complaint-top {
-        display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
-        margin-bottom: 10px;
       }
 
-      .complaint-title {
-        margin: 0;
-        font-size: 1.06rem;
+      .two-col,
+      .filters,
+      .hero-stats {
+        grid-template-columns: 1fr;
       }
+    }
+  </style>
+</head>
 
-      .complaint-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        color: var(--muted);
-        font-size: 0.8rem;
-        margin-bottom: 10px;
-      }
+<body>
+  <div class="container">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">⚑</div>
+        <span>Complaint Tracker</span>
+      </div>
+      <div class="userbox hidden" id="userbox">
+        <span class="pill" id="user-label"></span>
+        <button class="secondary-button" type="button" id="logout-btn">Log out</button>
+      </div>
+    </header>
 
-      .complaint-desc {
-        margin: 0 0 14px;
-        color: var(--muted);
-        line-height: 1.6;
-      }
-
-      .complaint-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
-      .complaint-footer small {
-        color: var(--muted);
-      }
-
-      .actions {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .action-button {
-        background: #eaf2ff;
-        color: var(--primary-dark);
-        padding: 8px 12px;
-        font-size: 0.8rem;
-      }
-
-      .action-button.delete {
-        background: #fee2e2;
-        color: #b91c1c;
-      }
-
-      .empty-state {
-        padding: 28px 18px;
-        text-align: center;
-        color: var(--muted);
-        border: 1px dashed var(--border);
-        border-radius: 18px;
-        background: #fbfdff;
-      }
-
-      .notice {
-        display: none;
-        border-radius: 12px;
-        padding: 12px 14px;
-        font-size: 0.92rem;
-        font-weight: 700;
-      }
-
-      .notice.error {
-        display: block;
-        background: #fee2e2;
-        color: #991b1b;
-        border: 1px solid #fecaca;
-      }
-
-      .notice.success {
-        display: block;
-        background: #d1fae5;
-        color: #065f46;
-        border: 1px solid #a7f3d0;
-      }
-
-      .complaint-title {
-        overflow-wrap: anywhere;
-      }
-
-      .complaint-desc {
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
-      }
-
-      @media (max-width: 900px) {
-        .hero, .main-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (max-width: 560px) {
-        .topbar,
-        .complaint-top,
-        .complaint-footer,
-        .card-header {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .two-col,
-        .filters,
-        .hero-stats {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brand-mark">⚑</div>
-          <span>Complaint Tracker</span>
+    <section class="panel auth-wrap" id="auth-section">
+      <div class="auth-tabs">
+        <button class="secondary-button active" type="button" id="tab-login">Log in</button>
+        <button class="secondary-button" type="button" id="tab-register">Register</button>
+      </div>
+      <div id="auth-message" class="notice" role="alert"></div>
+      <form id="auth-form">
+        <div class="field">
+          <label for="auth-username">Username</label>
+          <input id="auth-username" type="text" minlength="3" maxlength="40" autocomplete="username" required />
         </div>
-        <div class="pill">Public service dashboard</div>
-      </header>
+        <div class="field">
+          <label for="auth-password">Password</label>
+          <input id="auth-password" type="password" minlength="6" autocomplete="current-password" required />
+        </div>
+        <button class="primary-button" type="submit" id="auth-submit">Log in</button>
+      </form>
+    </section>
+
+    <div id="app" class="hidden">
 
       <section class="hero">
         <div class="panel hero-copy">
@@ -522,12 +630,14 @@
           <form id="complaint-form">
             <div class="field">
               <label for="title">Title</label>
-              <input id="title" name="title" type="text" minlength="5" maxlength="100" placeholder="Broken street light" required />
+              <input id="title" name="title" type="text" minlength="5" maxlength="100" placeholder="Broken street light"
+                required />
             </div>
 
             <div class="field">
               <label for="description">Description</label>
-              <textarea id="description" name="description" minlength="10" placeholder="Describe the issue in detail" required></textarea>
+              <textarea id="description" name="description" minlength="10" placeholder="Describe the issue in detail"
+                required></textarea>
             </div>
 
             <div class="two-col">
@@ -547,12 +657,14 @@
             <div class="two-col">
               <div class="field">
                 <label for="citizen_name">Citizen name</label>
-                <input id="citizen_name" name="citizen_name" type="text" minlength="2" maxlength="80" placeholder="Ram Shrestha" required />
+                <input id="citizen_name" name="citizen_name" type="text" minlength="2" maxlength="80"
+                  placeholder="Ram Shrestha" required />
               </div>
 
               <div class="field">
                 <label for="phone">Phone</label>
-                <input id="phone" name="phone" type="tel" pattern="[0-9]{7,15}" title="Enter 7 to 15 digits, or leave this blank." placeholder="9800000000" />
+                <input id="phone" name="phone" type="tel" pattern="[0-9]{7,15}"
+                  title="Enter 7 to 15 digits, or leave this blank." placeholder="9800000000" />
               </div>
             </div>
 
@@ -562,7 +674,7 @@
 
         <section class="panel card">
           <div class="card-header">
-            <h2>Complaint list</h2>
+            <h2 id="list-title">Complaint list</h2>
           </div>
 
           <div class="filters">
@@ -594,120 +706,135 @@
         </section>
       </main>
     </div>
+  </div>
 
-    <script>
-      const complaintsList = document.getElementById('complaints-list');
-      const form = document.getElementById('complaint-form');
-      const statusSummary = document.getElementById('status-summary');
-      const formMessage = document.getElementById('form-message');
+  <script>
+    const complaintsList = document.getElementById('complaints-list');
+    const form = document.getElementById('complaint-form');
+    const statusSummary = document.getElementById('status-summary');
+    const formMessage = document.getElementById('form-message');
 
-      function showMessage(text, type) {
-        formMessage.textContent = text;
-        formMessage.className = `notice ${type}`;
+    let token = sessionStorage.getItem('token');
+    let currentUser = JSON.parse(sessionStorage.getItem('user') || 'null');
+    const isAdmin = () => currentUser && currentUser.role === 'admin';
+    let registerMode = false;
+
+    function showMessage(text, type) {
+      formMessage.textContent = text;
+      formMessage.className = `notice ${type}`;
+    }
+
+    function formatApiError(detail) {
+      if (Array.isArray(detail)) {
+        return detail.map((item) => {
+          const location = Array.isArray(item.loc) ? item.loc.slice(1).join('.') : '';
+          return `${location ? `${location}: ` : ''}${item.msg || 'Invalid value'}`;
+        }).join(' ');
       }
 
-      function formatApiError(detail) {
-        if (Array.isArray(detail)) {
-          return detail.map((item) => {
-            const location = Array.isArray(item.loc) ? item.loc.slice(1).join('.') : '';
-            return `${location ? `${location}: ` : ''}${item.msg || 'Invalid value'}`;
-          }).join(' ');
-        }
+      if (typeof detail === 'string') return detail;
+      return 'The request could not be completed.';
+    }
 
-        if (typeof detail === 'string') return detail;
-        return 'The request could not be completed.';
-      }
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (character) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      })[character]);
+    }
 
-      function escapeHtml(value) {
-        return String(value ?? '').replace(/[&<>"']/g, (character) => ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;',
-        })[character]);
-      }
+    function formatDate(value) {
+      return new Date(value).toLocaleString();
+    }
 
-      function formatDate(value) {
-        return new Date(value).toLocaleString();
-      }
+    function statusLabel(status) {
+      return status.replace('_', ' ');
+    }
 
-      function statusLabel(status) {
-        return status.replace('_', ' ');
-      }
+    function renderSummary(stats) {
+      const statuses = ['pending', 'in_progress', 'resolved', 'rejected'];
+      let total = 0;
 
-      function renderSummary(stats) {
-        const statuses = ['pending', 'in_progress', 'resolved', 'rejected'];
-        let total = 0;
-
-        statusSummary.innerHTML = statuses.map((status) => {
-          const count = Number(stats[status] || 0);
-          total += count;
-          return `
+      statusSummary.innerHTML = statuses.map((status) => {
+        const count = Number(stats[status] || 0);
+        total += count;
+        return `
             <div class="status-line">
               <strong>${statusLabel(status)}</strong>
               <span class="badge ${status}">${count}</span>
             </div>
           `;
-        }).join('');
+      }).join('');
 
-        document.getElementById('stat-total').textContent = total;
-        document.getElementById('stat-pending').textContent = stats.pending || 0;
-        document.getElementById('stat-in_progress').textContent = stats.in_progress || 0;
-        document.getElementById('stat-resolved').textContent = stats.resolved || 0;
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-pending').textContent = stats.pending || 0;
+      document.getElementById('stat-in_progress').textContent = stats.in_progress || 0;
+      document.getElementById('stat-resolved').textContent = stats.resolved || 0;
+    }
+
+    async function fetchJson(url, options = {}) {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(options.headers || {}),
+        },
+      });
+
+      if (response.status === 401 && token) {
+        logout();
+        throw new Error('Your session expired. Please log in again.');
       }
 
-      async function fetchJson(url, options = {}) {
-        const response = await fetch(url, {
-          headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-          ...options,
-        });
-
-        const text = await response.text();
-        let data = null;
-        if (text) {
-          try {
-            data = JSON.parse(text);
-          } catch {
-            data = { detail: text };
-          }
-        }
-
-        if (!response.ok) {
-          throw new Error(formatApiError(data?.detail || data?.message));
-        }
-
-        return data;
-      }
-
-      async function loadStats() {
+      const text = await response.text();
+      let data = null;
+      if (text) {
         try {
-          const stats = await fetchJson('/complaints/stats');
-          renderSummary(stats);
-        } catch (error) {
-          showMessage(`Could not load complaint summary: ${error.message}`, 'error');
+          data = JSON.parse(text);
+        } catch {
+          data = { detail: text };
         }
       }
 
-      async function loadComplaints() {
-        const status = document.getElementById('filter-status').value;
-        const category = document.getElementById('filter-category').value;
-        const params = new URLSearchParams();
+      if (!response.ok) {
+        throw new Error(formatApiError(data?.detail || data?.message));
+      }
 
-        if (status) params.set('status', status);
-        if (category) params.set('category', category);
+      return data;
+    }
 
-        const url = `/complaints${params.toString() ? `?${params.toString()}` : ''}`;
+    async function loadStats() {
+      try {
+        const stats = await fetchJson('/complaints/stats');
+        renderSummary(stats);
+      } catch (error) {
+        showMessage(`Could not load complaint summary: ${error.message}`, 'error');
+      }
+    }
 
-        try {
-          const complaints = await fetchJson(url);
+    async function loadComplaints() {
+      const status = document.getElementById('filter-status').value;
+      const category = document.getElementById('filter-category').value;
+      const params = new URLSearchParams();
 
-          if (!complaints.length) {
-            complaintsList.innerHTML = '<div class="empty-state">No complaints match the selected filters.</div>';
-            return;
-          }
+      if (status) params.set('status', status);
+      if (category) params.set('category', category);
 
-          complaintsList.innerHTML = complaints.map((complaint) => `
+      const url = `/complaints${params.toString() ? `?${params.toString()}` : ''}`;
+
+      try {
+        const complaints = await fetchJson(url);
+
+        if (!complaints.length) {
+          complaintsList.innerHTML = '<div class="empty-state">No complaints match the selected filters.</div>';
+          return;
+        }
+
+        complaintsList.innerHTML = complaints.map((complaint) => `
             <article class="complaint-item">
               <div class="complaint-top">
                 <h3 class="complaint-title">${escapeHtml(complaint.title)}</h3>
@@ -720,104 +847,169 @@
                 <span>${escapeHtml(complaint.category)}</span>
                 <span>•</span>
                 <span>${escapeHtml(complaint.citizen_name)}</span>
+                ${isAdmin() ? `<span>•</span><span>user #${escapeHtml(complaint.owner_id ?? 'n/a')}</span>` : ''}
               </div>
 
               <p class="complaint-desc">${escapeHtml(complaint.description)}</p>
 
+              ${complaint.remarks ? `<div class="remarks"><strong>Remarks:</strong> ${escapeHtml(complaint.remarks)}</div>` : ''}
+
               <div class="complaint-footer">
                 <small>Updated: ${escapeHtml(formatDate(complaint.updated_at))}</small>
                 <div class="actions">
-                  ${!['resolved', 'rejected'].includes(complaint.status) ? `
+                  ${isAdmin() && !['resolved', 'rejected'].includes(complaint.status) ? `
                     <button class="action-button" type="button" data-status="in_progress" data-id="${escapeHtml(complaint.id)}">Mark in progress</button>
                     <button class="action-button" type="button" data-status="resolved" data-id="${escapeHtml(complaint.id)}">Resolve</button>
+                    <button class="action-button reject" type="button" data-status="rejected" data-id="${escapeHtml(complaint.id)}">Reject</button>
                   ` : ''}
-                  <button class="action-button delete" type="button" data-delete="${escapeHtml(complaint.id)}">Delete</button>
+                  ${isAdmin() ? `<button class="action-button delete" type="button" data-delete="${escapeHtml(complaint.id)}">Delete</button>` : ''}
                 </div>
               </div>
             </article>
           `).join('');
 
-          complaintsList.querySelectorAll('[data-status]').forEach((button) => {
-            button.addEventListener('click', async () => {
-              const { id, status } = button.dataset;
-              try {
-                await fetchJson(`/complaints/${id}/status`, {
-                  method: 'PATCH',
-                  body: JSON.stringify({ status, remarks: 'Updated from dashboard' })
-                });
-                showMessage('Complaint status updated.', 'success');
-                await Promise.all([loadComplaints(), loadStats()]);
-              } catch (error) {
-                showMessage(error.message, 'error');
-              }
-            });
+        complaintsList.querySelectorAll('[data-status]').forEach((button) => {
+          button.addEventListener('click', async () => {
+            const { id, status } = button.dataset;
+            const remarks = window.prompt(`Remarks for complaint #${id} (optional):`, '');
+            if (remarks === null) return;
+            try {
+              await fetchJson(`/complaints/${id}/status`, {
+                method: 'PATCH',
+                body: JSON.stringify({ status, remarks: remarks.trim() || null })
+              });
+              showMessage('Complaint status updated.', 'success');
+              await Promise.all([loadComplaints(), loadStats()]);
+            } catch (error) {
+              showMessage(error.message, 'error');
+            }
           });
+        });
 
-          complaintsList.querySelectorAll('[data-delete]').forEach((button) => {
-            button.addEventListener('click', async () => {
-              const id = button.dataset.delete;
-              if (!window.confirm(`Delete complaint #${id}? This cannot be undone.`)) return;
-              try {
-                await fetchJson(`/complaints/${id}`, { method: 'DELETE' });
-                showMessage('Complaint deleted.', 'success');
-                await Promise.all([loadComplaints(), loadStats()]);
-              } catch (error) {
-                showMessage(error.message, 'error');
-              }
-            });
+        complaintsList.querySelectorAll('[data-delete]').forEach((button) => {
+          button.addEventListener('click', async () => {
+            const id = button.dataset.delete;
+            if (!window.confirm(`Delete complaint #${id}? This cannot be undone.`)) return;
+            try {
+              await fetchJson(`/complaints/${id}`, { method: 'DELETE' });
+              showMessage('Complaint deleted.', 'success');
+              await Promise.all([loadComplaints(), loadStats()]);
+            } catch (error) {
+              showMessage(error.message, 'error');
+            }
           });
-        } catch (error) {
-          complaintsList.innerHTML = '';
-          const errorMessage = document.createElement('div');
-          errorMessage.className = 'empty-state';
-          errorMessage.setAttribute('role', 'alert');
-          errorMessage.textContent = `Could not load complaints: ${error.message}`;
-          complaintsList.append(errorMessage);
-          showMessage(`Could not load complaints: ${error.message}`, 'error');
-        }
+        });
+      } catch (error) {
+        complaintsList.innerHTML = '';
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'empty-state';
+        errorMessage.setAttribute('role', 'alert');
+        errorMessage.textContent = `Could not load complaints: ${error.message}`;
+        complaintsList.append(errorMessage);
+        showMessage(`Could not load complaints: ${error.message}`, 'error');
       }
+    }
 
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const payload = {
-          title: document.getElementById('title').value,
-          description: document.getElementById('description').value,
-          category: document.getElementById('category').value,
-          citizen_name: document.getElementById('citizen_name').value,
-          phone: document.getElementById('phone').value || null,
-        };
-        const submitButton = form.querySelector('button[type="submit"]');
-        submitButton.disabled = true;
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const payload = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        category: document.getElementById('category').value,
+        citizen_name: document.getElementById('citizen_name').value,
+        phone: document.getElementById('phone').value || null,
+      };
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
 
-        try {
-          await fetchJson('/complaints', {
-            method: 'POST',
-            body: JSON.stringify(payload),
-          });
+      try {
+        await fetchJson('/complaints', {
+          method: 'POST',
+          body: JSON.stringify(payload),
+        });
 
-          form.reset();
-          document.getElementById('filter-status').value = '';
-          document.getElementById('filter-category').value = '';
-          showMessage('Complaint added successfully.', 'success');
-          await Promise.all([loadComplaints(), loadStats()]);
-        } catch (error) {
-          showMessage(error.message, 'error');
-        } finally {
-          submitButton.disabled = false;
-        }
-      });
-
-      document.getElementById('filter-status').addEventListener('change', loadComplaints);
-      document.getElementById('filter-category').addEventListener('change', loadComplaints);
-      document.getElementById('refresh-data').addEventListener('click', async () => {
+        form.reset();
+        document.getElementById('filter-status').value = '';
+        document.getElementById('filter-category').value = '';
+        showMessage('Complaint added successfully.', 'success');
         await Promise.all([loadComplaints(), loadStats()]);
-      });
-      document.getElementById('focus-form').addEventListener('click', () => {
-        document.getElementById('title').focus();
-      });
+      } catch (error) {
+        showMessage(error.message, 'error');
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
 
+    document.getElementById('filter-status').addEventListener('change', loadComplaints);
+    document.getElementById('filter-category').addEventListener('change', loadComplaints);
+    document.getElementById('refresh-data').addEventListener('click', async () => {
+      await Promise.all([loadComplaints(), loadStats()]);
+    });
+    document.getElementById('focus-form').addEventListener('click', () => {
+      document.getElementById('title').focus();
+    });
+
+    // ---------- authentication ----------
+    const authMessage = document.getElementById('auth-message');
+
+    function setAuthMode(register) {
+      registerMode = register;
+      document.getElementById('tab-login').classList.toggle('active', !register);
+      document.getElementById('tab-register').classList.toggle('active', register);
+      document.getElementById('auth-submit').textContent = register ? 'Create account' : 'Log in';
+      document.getElementById('auth-password').autocomplete = register ? 'new-password' : 'current-password';
+      authMessage.className = 'notice';
+    }
+
+    function showApp() {
+      const loggedIn = Boolean(token && currentUser);
+      document.getElementById('auth-section').classList.toggle('hidden', loggedIn);
+      document.getElementById('app').classList.toggle('hidden', !loggedIn);
+      document.getElementById('userbox').classList.toggle('hidden', !loggedIn);
+      if (!loggedIn) return;
+
+      document.getElementById('user-label').textContent = `${currentUser.username} · ${currentUser.role}`;
+      document.getElementById('list-title').textContent = isAdmin() ? 'All complaints (admin)' : 'My complaints';
       loadComplaints();
       loadStats();
-    </script>
-  </body>
+    }
+
+    function logout() {
+      if (token) fetch('/auth/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).catch(() => { });
+      token = null;
+      currentUser = null;
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
+      showApp();
+    }
+
+    document.getElementById('tab-login').addEventListener('click', () => setAuthMode(false));
+    document.getElementById('tab-register').addEventListener('click', () => setAuthMode(true));
+    document.getElementById('logout-btn').addEventListener('click', logout);
+
+    document.getElementById('auth-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const username = document.getElementById('auth-username').value.trim();
+      const password = document.getElementById('auth-password').value;
+      try {
+        if (registerMode) {
+          await fetchJson('/auth/register', { method: 'POST', body: JSON.stringify({ username, password }) });
+        }
+        const result = await fetchJson('/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
+        token = result.access_token;
+        currentUser = result.user;
+        sessionStorage.setItem('token', token);
+        sessionStorage.setItem('user', JSON.stringify(currentUser));
+        document.getElementById('auth-form').reset();
+        showApp();
+      } catch (error) {
+        authMessage.textContent = error.message;
+        authMessage.className = 'notice error';
+      }
+    });
+
+    showApp();
+  </script>
+</body>
+
 </html>

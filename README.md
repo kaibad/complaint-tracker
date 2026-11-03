@@ -176,11 +176,15 @@ All request and response bodies are JSON. Interactive documentation for every en
 | GET | `/` | Complaint dashboard | 200 | none |
 | GET | `/api/health` | Health check | 200 | none |
 | POST | `/complaints` | File a new complaint | 201 | 422 |
-| GET | `/complaints` | List complaints | 200 | 422 |
+| POST | `/auth/register` | Create a citizen account | 201 | 409, 422 |
+| POST | `/auth/login` | Log in, get a bearer token | 200 | 401 |
+| GET | `/auth/me` | Current user | 200 | 401 |
+| POST | `/auth/logout` | Invalidate the token | 204 | 401 |
+| GET | `/complaints` | List complaints (admin: all, citizen: own) | 200 | 401, 422 |
 | GET | `/complaints/stats` | Count by status | 200 | none |
 | GET | `/complaints/{id}` | Get one complaint | 200 | 404 |
-| PATCH | `/complaints/{id}/status` | Update status and remarks | 200 | 400, 404, 422 |
-| DELETE | `/complaints/{id}` | Delete a complaint | 204 | 404 |
+| PATCH | `/complaints/{id}/status` | **Admin only.** Update status and remarks | 200 | 400, 401, 403, 404, 422 |
+| DELETE | `/complaints/{id}` | **Admin only.** Delete a complaint | 204 | 401, 403, 404 |
 
 ### Create a complaint
 
@@ -280,6 +284,21 @@ The counts are computed in the database with a `GROUP BY` query rather than by l
 | 404 | Not Found | No complaint with that id |
 | 422 | Unprocessable Entity | Input failed validation |
 
+### Roles and authentication
+
+- **Citizen** (self-registered): files complaints and sees only their own, including the admin's status and remarks. Cannot change status or delete.
+- **Admin**: sees every complaint, and is the only role that can change a status or delete. Admins cannot be created through the API.
+
+Send the token from `/auth/login` as `Authorization: Bearer <token>` (Swagger UI: the Authorize button is not wired; use curl or the dashboard). Tokens last 12 hours and only their hash is stored.
+
+The first admin is created on startup from the `ADMIN_USERNAME` and `ADMIN_PASSWORD` environment variables. If unset, it defaults to `admin` / `admin123` and prints a warning. **Change this before deploying.**
+
+```bash
+ADMIN_USERNAME=officer ADMIN_PASSWORD='a-strong-password' uvicorn app.main:app --reload
+```
+
+Existing `complaints.db` files: `create_all` adds the new `users` and `auth_tokens` tables but not the new `complaints.owner_id` column. Delete `complaints.db` to recreate it (old complaints without an owner would only be visible to admins anyway).
+
 ---
 
 ## 6. Validation and Error Handling
@@ -322,7 +341,7 @@ I distinguish two kinds of failure on purpose. A `422` means the request was mal
 
 ## 7. Testing
 
-The suite contains 12 tests covering the main success paths, validation failures, missing records, filtering, pagination, the closed-complaint rule and the statistics endpoint.
+The suite contains 23 tests covering the main success paths, validation failures, missing records, filtering, pagination, the closed-complaint rule and the statistics endpoint.
 
 ```bash
 pytest -v
@@ -394,7 +413,7 @@ Complaints contain personal data: a citizen's name and phone number. I treat tha
 
 **What is not in place yet**
 
-- There is no authentication or authorisation. At present anyone who can reach the API can read, update or delete any complaint. Before a real deployment, citizens and officers would need separate roles, and the status-update and delete endpoints would be restricted to officers.
+- Authentication is basic (username and password, bearer tokens, no password reset, no login rate limiting). Role checks are in place: only admins can change status or delete.
 - Phone numbers are stored in plain text and returned in full by every read endpoint. A production system should limit who can see them, and consider masking them in list responses.
 - There is no rate limiting and no HTTPS configuration. These would normally be handled by a reverse proxy in front of the application.
 
@@ -427,7 +446,7 @@ I list these gaps openly because documenting a limitation is part of handling da
 
 **Planned improvements, in priority order**
 
-1. JWT authentication with citizen and officer roles.
+1. Password reset and login rate limiting.
 2. A status-history table to record who changed a complaint, when, and why.
 3. Database migrations with Alembic.
 4. Soft delete instead of permanent deletion.

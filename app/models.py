@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Enum, String, Text
+from sqlalchemy import DateTime, Enum, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .database import Base
@@ -22,8 +22,34 @@ class Category(str, enum.Enum):
     OTHER = "other"
 
 
+class Role(str, enum.Enum):
+    CITIZEN = "citizen"
+    ADMIN = "admin"
+
+
 def utcnow() -> datetime:
     return datetime.now(timezone.utc)
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(String(40), unique=True, index=True)
+    password_hash: Mapped[str] = mapped_column(String(200))
+    role: Mapped[Role] = mapped_column(Enum(Role), default=Role.CITIZEN)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class AuthToken(Base):
+    """Login sessions. Only a hash of the token is stored."""
+
+    __tablename__ = "auth_tokens"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 
 class Complaint(Base):
@@ -36,6 +62,7 @@ class Complaint(Base):
     citizen_name: Mapped[str] = mapped_column(String(80))
     phone: Mapped[str | None] = mapped_column(String(15), nullable=True)
     status: Mapped[Status] = mapped_column(Enum(Status), default=Status.PENDING, index=True)
+    owner_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
     remarks: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(
